@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.kkjQBD {
+  padding: "0px" !important;
+}
+
 .active {
   background-color: "#0090c540";
   color: "#0090C5";
