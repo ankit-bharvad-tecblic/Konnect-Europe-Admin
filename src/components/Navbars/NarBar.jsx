@@ -23,6 +23,9 @@ const MobileNav = ({ onOpen, ...rest }) => {
       ml={{ base: 0, md: 0 }}
       px={{ base: 5, md: 5 }}
       height="24"
+      w="100%"
+      position="fixed"
+      zIndex={220}
       alignItems="center"
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
@@ -31,6 +34,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
       justifyContent={{ base: "space-between", md: "flex-between" }}
       {...rest}
     >
+      {/* top header logo img  */}
       <Box width={200} display={{ base: "none", md: "block" }}>
         <Image
           sx={{ mx: "auto" }}
@@ -55,7 +59,17 @@ const MobileNav = ({ onOpen, ...rest }) => {
         fontSize="2xl"
         fontFamily="monospace"
         fontWeight="bold"
-      ></Text>
+      >
+        <Box width={200} display={{ base: "flex", md: "none" }}>
+          <Image
+            sx={{ mx: "auto" }}
+            boxSize="70px"
+            objectFit="cover"
+            src="/assets/images/logo/light-logo.png"
+            alt="logo"
+          />
+        </Box>
+      </Text>
 
       <HStack display={{ base: "flex" }} spacing={{ base: "4", md: "6" }}>
         <IconButton

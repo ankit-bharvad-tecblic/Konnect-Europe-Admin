@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { extendTheme } from "@chakra-ui/react";
 import "./index.css";
 import App from "./App";
 
@@ -15,11 +16,31 @@ const test = () => {
   });
 };
 
-test();
+// test();
+
+const theme = extendTheme({
+  colors: {
+    primary: "#F95700",
+    secondary: "#0090C5",
+    textPrimary: "#5E6282",
+    warning: "",
+    danger: "",
+    hoverBg: "rgba(249, 87, 0, 0.1);",
+  },
+  fonts: {},
+  fontSizes: {},
+  breakpoints: {
+    sm: "320px",
+    md: "768px",
+    lg: "960px",
+    xl: "1200px",
+  },
+});
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <App />
     </ChakraProvider>
   </BrowserRouter>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Navigate, NavLink, useLocation } from "react-router-dom";
 
 import {
   Box,
@@ -10,6 +11,8 @@ import {
   Drawer,
   DrawerContent,
   useDisclosure,
+  Button,
+  Collapse,
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -21,15 +24,32 @@ import {
 import MobileNav from "../Navbars/NarBar";
 
 const LinkItems = [
-  { name: "Home", icon: FiHome },
-  { name: "Travel Agent List", icon: FiTrendingUp },
-  { name: "Holiday Packages", icon: FiCompass },
-  { name: "Team", icon: FiStar },
-  { name: "Reports", icon: FiSettings },
+  {
+    name: "Dashboard",
+    icon: FiHome,
+    collapse: false,
+    path: "/",
+  },
+  {
+    name: "Travel Agent List",
+    icon: FiTrendingUp,
+    path: "/travel-agent-list",
+    collapse: false,
+  },
+  { name: "Holiday Packages", icon: FiCompass, path: "/holiday-packages" },
+  {
+    name: "Team",
+    icon: FiStar,
+    path: "/team",
+    collapse: true,
+    children: [{ name: "sub ", path: "/sub", icon: FiTrendingUp }],
+  },
+  { name: "Reports", icon: FiSettings, path: "/reports" },
 ];
 
 export default function SidebarWithHeader({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -58,10 +78,44 @@ export default function SidebarWithHeader({ children }) {
   );
 }
 
+const ReturnMenu = (link) => {
+  const [show, setShow] = React.useState(false);
+  const handleToggle = () => setShow(!show);
+  return (
+    <>
+      {link.collapse ? (
+        <>
+          <NavItem key={link.name} icon={link.icon} onClick={handleToggle}>
+            {link.name}
+          </NavItem>
+
+          {link.children.map((child) => {
+            return (
+              <>
+                <Collapse
+                  style={{ marginLeft: "25px" }}
+                  in={show}
+                  unmountOnExit
+                >
+                  {ReturnMenu(child)}
+                </Collapse>
+              </>
+            );
+          })}
+        </>
+      ) : (
+        <NavItem key={link.name} path={link.path} icon={link.icon}>
+          {link.name}
+        </NavItem>
+      )}
+    </>
+  );
+};
+
 const SidebarContent = ({ onClose, ...rest }) => {
   return (
     <Box
-      sx={{ marginTop: "130px" }}
+      sx={{ marginTop: "130px", padding: "20px" }}
       transition="3s ease"
       bg={useColorModeValue("white", "red.500")}
       borderRight="1px"
@@ -69,34 +123,29 @@ const SidebarContent = ({ onClose, ...rest }) => {
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", md: 60 }}
       pos="fixed"
-      h="80vh"
+      h="100vh"
       {...rest}
     >
       <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
-      <Box my="4" alignItems="center" mx="1" justifyContent="space-between">
-        {LinkItems.map((link) => (
-          <NavItem key={link.name} icon={link.icon}>
-            {link.name}
-          </NavItem>
-        ))}
-      </Box>
+      {LinkItems.map((el) => ReturnMenu(el))}
     </Box>
   );
 };
 
-const NavItem = ({ icon, children, ...rest }) => {
+const NavItem = ({ icon, children, path, ...rest }) => {
+  const location = useLocation();
+  console.log("location ---> ", location);
   return (
-    <Link
-      href="#"
-      style={{ textDecoration: "none" }}
-      _focus={{ boxShadow: "none" }}
-    >
+    <NavLink to={path}>
       <Flex
         align="center"
         p="4"
+        mt="2"
         borderRadius="lg"
         role="group"
         cursor="pointer"
+        bg={path === location?.pathname ? "#0090c540" : ""}
+        color={path === location?.pathname ? "#0090C5" : ""}
         _hover={{
           bg: "#0090c540",
           color: "#0090C5",
@@ -115,6 +164,16 @@ const NavItem = ({ icon, children, ...rest }) => {
         )}
         {children}
       </Flex>
-    </Link>
+    </NavLink>
   );
 };
+
+// <Link
+//   //to={path}
+//   href={path}
+//   // replace
+//   style={{ textDecoration: "none" }}
+//   _focus={{ boxShadow: "none" }}
+// >
+
+// </Link>
